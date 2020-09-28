@@ -1,0 +1,19 @@
+---
+title: "Exploring Opinions Towards Social Conflicts Using CES2000"
+author: "Yiqu Ding"
+date: 2015-07-23T21:13:14-05:00
+abstract: Exploration on public opinion towards some of the social issues using data
+  from Canadian election study in 2000. Interesting to see which soicial conflict people thought
+  of most important. Discovery of some difference in opinions between people from
+  different age and income groups.
+categories: ["R"]
+bibliography: references.bib
+tags: ["R Markdown", "plot", "regression"]
+---
+
+We use `R`[@cr] and `R` package `tidyverse` [@ctidyverse] to do the analysis. 
+
+Code and data supporting this analysis is avaliable at:
+"https://github.com/dding33/STA304".
+
+# Reference
