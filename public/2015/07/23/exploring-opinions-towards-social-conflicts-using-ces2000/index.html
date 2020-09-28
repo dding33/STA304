@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="../../../../css/fonts.css" media="all">
 <link rel="stylesheet" href="../../../../css/main.css" media="all">
 
@@ -55,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">1 min read</span>
+    <span class="article-duration">6 min read</span>
     
 
     <h1 class="article-title">Exploring Opinions Towards Social Conflicts Using CES2000</h1>
@@ -71,6 +76,206 @@
 <p>We use <code>R</code><span class="citation">(R Core Team 2020)</span> and <code>R</code> package <code>tidyverse</code> <span class="citation">(Wickham et al. 2019)</span> to do the analysis.</p>
 <p>Code and data supporting this analysis is avaliable at:
 “<a href="https://github.com/dding33/STA304" class="uri">https://github.com/dding33/STA304</a>”.</p>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Class of 2022, this is the data on the year when most of you were born! Come and check on people’s opinions towards some society issues that are still present today.</p>
+<p>The motivation is simple: in year of 2020, we consider our society to have a decent amount of modernness, in terms of humanities. As generation Z, we were raised to know the importance of protecting the environment, to acknowledge woman’s rights, to know there should not be any racism. We got very used to these concepts to ignore that these issues, along with its ‘complications’, may been seen as new ideas to a society 20 years ago—–which is not long ago at all. Finding out people’s opinion towards particular conflicts, and whether the thought differs between age groups and income categories is the main question of interest.</p>
+<p>This blog includes graphs and analysis to show you a glance of how the society back then thought of some common social issues, how they might differ between age groups/income groups. It explores basic stats characteristics of the data, mentions the limitations of this method of analysis, and potential ways to overcome these limitations.</p>
+</div>
+<div id="data-discussion" class="section level1">
+<h1>Data discussion</h1>
+<p><strong>Brief</strong></p>
+<p>CES-E-2000, the Canadian Election Study for 2000, aims to help understanding voting behaviors among Canadians using survey data, collected from all provinces across Canada. The study uses individuals as unit of analysis, and lasted over the period of 2000 to 2001.</p>
+<p>The study consists of 3 surveys, CPS which was distributed and collected during campaign period, PES which stands for post election survey, and MBS were usually sent out one to two weeks after completion of PES.</p>
+<p>We focus on the CPS in this blog. Rating scores and their description can be found in appendix(table 2 and Table 3).</p>
+<p><strong>Data Wrangling</strong></p>
+<p>‘ces2000’ contains 3651 observations of 790 variables, and are categorized into 95 groups. The writer of this blog reduced it down to 13 variables from 4 categorical groups, including group vote intentions, group personal finance, group policy I&amp;II, which suits the question of interest the best.</p>
+<p>Table 1 gives a summary of all variables selected.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Variables in the ces2000 dataset
+and their description</caption>
+<colgroup>
+<col width="28%" />
+<col width="71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">CPS survey variables</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">enviroment</td>
+<td align="left">Is protecting the enviroment important</td>
+</tr>
+<tr class="even">
+<td align="left">fighting_crime</td>
+<td align="left">Is fighting crimes important</td>
+</tr>
+<tr class="odd">
+<td align="left">cutting_taxes</td>
+<td align="left">Is cutting taxes important</td>
+</tr>
+<tr class="even">
+<td align="left">more_for_women</td>
+<td align="left">Should more things be done for women</td>
+</tr>
+<tr class="odd">
+<td align="left">more_for_racial_minority</td>
+<td align="left">Should more things be done for racial minorities</td>
+</tr>
+<tr class="even">
+<td align="left">how_much_for_wealth_gap</td>
+<td align="left">How much should the government spend to decrease the wealth gap</td>
+</tr>
+<tr class="odd">
+<td align="left">How_much_on_cutting_tax</td>
+<td align="left">How much should the government spend on cutting taxes</td>
+</tr>
+<tr class="even">
+<td align="left">women_stay_home</td>
+<td align="left">SHould women stay home</td>
+</tr>
+<tr class="odd">
+<td align="left">LGBT_marriage</td>
+<td align="left">Should LGBT marriages be allowed</td>
+</tr>
+<tr class="even">
+<td align="left">source_of_funds</td>
+<td align="left">Should parties reveal all source of fund for campign</td>
+</tr>
+<tr class="odd">
+<td align="left">age</td>
+<td align="left">respondent age</td>
+</tr>
+<tr class="even">
+<td align="left">income</td>
+<td align="left">respondent income</td>
+</tr>
+<tr class="odd">
+<td align="left">income_cat</td>
+<td align="left">respondent income category if exact income is NA</td>
+</tr>
+</tbody>
+</table>
+<p>Data types of a few variables are changed to fit into ggplot function for data visualization later.</p>
+<p>Income categories 11 and above does not represent something meaningful to this blog, since it contains system missing values, ‘don’t know’ from respondents who do know know their income and ‘refused’ from respondents who refused to reveal their income. Therefore it has been filtered using ‘filter()’.</p>
+<p>Below is a summary of types of all observations and missing value.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><strong>Data Characteristics</strong></p>
+<p>Among respondents who revealed their exact income amount, the minimum yearly income is 6,000 dollars, maximum is 75,000 dollars. The median is 12,000 dollars and the mean is 24,800 dollars. IQR is 9,000.</p>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##     6.0    11.0    12.0    24.8    20.0    75.0     713</code></pre>
+<p>The minimum age among respondents is 18 years old(and he/she is 38 now), the maximum age is 98 years old. Average respondent age is 48 years old. IQR is 52.</p>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##    1902    1936    1953    1952    1968    1982       3</code></pre>
+<p>Among people who refused to reveal the exact income but can indicate their income range, figure 1 shows that the majority of respondents reports their income to be in group 1-3, ranging from less than 20,000 dollars to 39,000 dollars. The number of respondents with more than 100,000 dollars of income levels with the number of respondents with number of respondents with income of 40,000 to 49,999 dollars.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="graph-and-discussion" class="section level1">
+<h1>Graph and Discussion</h1>
+<p>Note that all figures indicate the number of cases found in the data file. They cannot be interpreted as summary statistics of the population of interest.</p>
+<p>Figure 2 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues very important.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Figure 3 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues important.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Figure 4 shows scatter plots of age and opinions towards cutting taxes, colored by income categories. People in general does think environmental issues important.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Figure 5 shows a box plot of opinion towards whether women staying home makes the society better, with reference to respondent’s age. Respondents leaned towards ‘strongly agree’ and ‘strong disagree’, with older respondents preferring ‘strongly agree’ and younger respondents ‘strongly disagree’.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Figure 6 shows the box plot of opinion towards whether LGBT marriage should be allowed, with reference to respondent’s age. Younger respondents tend to be more neutral than older respondents.</p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><strong>Conclusion</strong></p>
+<p>~Among those who revealed their income categories, majority(51.4%)reported income under 39,999/ year. The percentage of respondents with income between 40,000~49,999 dollars per year levels with those who reported a yearly income of over 100,000, both at 8%.</p>
+<p>~Among protecting the environment, fighting crimes and cutting taxes, respondents of CPS in 2000 thought environmental issues the most important, followed by fighting crimes and cutting taxes. There is no significant difference between age/ income groups.</p>
+<p>~Older respondents tend to strongly agree with ‘the society is better when women stay home with their children’, and younger respondents tend to strong disagree with that.</p>
+<p>~Older respondents tend to be more aggressive with their opinion towards LGBT marriage, while younger respondents tend to be more neutral.</p>
+</div>
+<div id="limitation-and-next-steps" class="section level1">
+<h1>Limitation and next steps</h1>
+<p><strong>Limitations</strong></p>
+<p>Filtering out the missing data may cause biased results.</p>
+<p>Not combining two different ways of recording income makes analysis including income incomplete.</p>
+<p><strong>Next Steps</strong></p>
+<ul>
+<li><p>Incorporate ways to model for the missing data instead of filter().</p></li>
+<li><p>Incorporate ways to combine two variables of income into a single one.</p></li>
+</ul>
+</div>
+<div id="appendix" class="section level1">
+<h1>Appendix</h1>
+<table>
+<caption><span id="tab:unnamed-chunk-17">Table 2: </span>Rating Scores for importance</caption>
+<thead>
+<tr class="header">
+<th align="left">Value</th>
+<th align="left">Label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Very Important</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">Somewhat Important</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">Not Very Important</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">Do not plan to vote</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">don’t know</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">refused</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:unnamed-chunk-18">Table 3: </span>Rating Scores for agreements</caption>
+<thead>
+<tr class="header">
+<th align="left">Value</th>
+<th align="left">Label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Strongly agree</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">Somewhat agree</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">Somewhat disagree</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">Strongly disagree</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">don’t know</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">refused</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="reference" class="section level1 unnumbered">
 <h1>Reference</h1>
 <div id="refs" class="references">
@@ -104,6 +309,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 

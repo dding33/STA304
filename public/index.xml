@@ -34,8 +34,8 @@
       <guid>/2015/07/23/exploring-opinions-towards-social-conflicts-using-ces2000/</guid>
       <description>We use R(R Core Team 2020) and R package tidyverse (Wickham et al. 2019) to do the analysis.
 Code and data supporting this analysis is avaliable at: “https://github.com/dding33/STA304”.
-Reference R Core Team. 2020. R: A Language and Environment for Statistical Computing. Vienna, Austria: R Foundation for Statistical Computing. https://www.R-project.org/.
- Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. “Welcome to the tidyverse.</description>
+Introduction Class of 2022, this is the data on the year when most of you were born! Come and check on people’s opinions towards some society issues that are still present today.
+The motivation is simple: in year of 2020, we consider our society to have a decent amount of modernness, in terms of humanities.</description>
     </item>
     
     <item>

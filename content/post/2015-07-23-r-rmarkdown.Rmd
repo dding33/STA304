@@ -11,9 +11,290 @@ bibliography: references.bib
 tags: ["R Markdown", "plot", "regression"]
 ---
 
+
 We use `R`[@cr] and `R` package `tidyverse` [@ctidyverse] to do the analysis. 
 
 Code and data supporting this analysis is avaliable at:
 "https://github.com/dding33/STA304".
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+options(scipen=999)
+# install.packages("tidyverse")
+# install.packages("devtools")
+# devtools::install_github("hodgettsp/cesR")
+library(tidyverse)
+library(visdat)
+library(cesR)
+library(knitr)
+library(gridExtra)
+```
+
+# Introduction
+
+ Class of 2022, this is the data on the year when most of you were born! Come and check on people's opinions towards some society issues that are still present today.
+ 
+ The motivation is simple: in year of 2020, we consider our society to have a decent amount of modernness, in terms of humanities. As generation Z, we were raised to know the importance of protecting the environment, to acknowledge woman's rights, to know there should not be any racism. We got very used to these concepts to ignore that these issues, along with its 'complications', may been seen as new ideas to a society 20 years ago-----which is not long ago at all. Finding out people's opinion towards particular conflicts, and whether the thought differs between age groups and income categories is the main question of interest.
+ 
+ This blog includes graphs and analysis to show you a glance of how the society back then thought of some common social issues, how they might differ between age groups/income groups. It explores basic stats characteristics of the data, mentions the limitations of this method of analysis, and potential ways to overcome these limitations.  
+
+# Data discussion
+
+**Brief**
+
+CES-E-2000, the Canadian Election Study for 2000, aims to help understanding voting behaviors among Canadians using survey data, collected from all provinces across Canada. The study uses individuals as unit of analysis, and lasted over the period of 2000 to 2001. 
+
+The study consists of 3 surveys, CPS which was distributed and collected during campaign period, PES which stands for post election survey, and MBS were usually sent out one to two weeks after completion of PES. 
+
+We focus on the CPS in this blog. Rating scores and their description can be found in appendix(table 2 and Table 3).   
+
+
+```{r download, include=FALSE, warning=FALSE, message=FALSE}
+#get cesR package
+devtools::install_github("hodgettsp/cesR")
+
+#get ces2020 data set from cesR
+cesR::get_ces('ces2000')
+```
+
+**Data Wrangling**
+
+'ces2000' contains 3651 observations of 790 variables, and are categorized into 95 groups. The writer of this blog reduced it down to 13 variables from 4 categorical groups, including group vote intentions, group personal finance, group policy I&II, which suits the question of interest the best.  
+
+```{r, include=FALSE}
+#Select variables
+ces2000_yd <- ces2000 %>% 
+  select(cpsa2a, cpsa2b, cpsa2g, cpsc10, cpsc11, 
+         cpsc13, cpspla25, cpsf3, cpsf18, cpsf7, cpsage,
+         cpsm16, cpsm16a) %>% 
+  rename(enviroment = cpsa2a, 
+         fighting_crime = cpsa2b, 
+         cutting_taxes = cpsa2g, 
+         more_for_women = cpsc10, 
+         more_for_racial_minority = cpsc11 , 
+         how_much_for_wealth_gap = cpsc13,
+         How_much_on_cutting_tax = cpspla25, 
+         women_stay_home = cpsf3,
+         LGBT_marriage = cpsf18, 
+         source_of_funds = cpsf7,
+         age = cpsage,
+         income = cpsm16,
+         income_cat = cpsm16a
+         )
+```
+
+Table 1 gives a summary of all variables selected.
+
+```{r, echo=FALSE}
+#Briefly describing the variables
+desc <- data.frame(vars = c('enviroment', 'fighting_crime', 'cutting_taxes', 
+                                     'more_for_women', 'more_for_racial_minority', 
+                                     'how_much_for_wealth_gap', 
+                                     'How_much_on_cutting_tax', 'women_stay_home', 
+                                     'LGBT_marriage', 'source_of_funds', 'age', 
+                                     'income', 'income_cat'),
+                            Cps = c('Is protecting the enviroment important',
+                                    "Is fighting crimes important", 'Is cutting taxes important',
+                                    'Should more things be done for women', 
+                                    'Should more things be done for racial minorities', 
+                                    'How much should the government spend to decrease the wealth gap', 
+                                    'How much should the government spend on cutting taxes', 
+                                    'SHould women stay home', 'Should LGBT marriages be allowed', 
+                                    'Should parties reveal all source of fund for campign', 'respondent age',
+                                    'respondent income',
+                                    'respondent income category if exact income is NA')
+                            )
+
+colnames(desc) <- c("CPS survey variables", "Description")
+
+kable(desc, caption="Variables in the ces2000 dataset 
+      and their description")
+```
+
+Data types of a few variables are changed to fit into ggplot function for data visualization later. 
+
+```{r, include=FALSE}
+#Change the class of some columns for plotting later
+ces2000_yd$income_cat <- as.numeric(ces2000_yd$income_cat)
+ces2000_yd$age <- as.numeric(ces2000_yd$age)
+ces2000_yd$enviroment <- as.numeric(ces2000_yd$enviroment)
+ces2000_yd$fighting_crime <- as.numeric(ces2000_yd$fighting_crime)
+ces2000_yd$cutting_taxes <- as.numeric(ces2000_yd$cutting_taxes)
+levels(ces2000_yd$income_cat)
+table(ces2000_yd$income_cat)
+round(prop.table(table(ces2000_yd$income_cat)), 10)
+```
+
+Income categories 11 and above does not represent something meaningful to this blog, since it contains system missing values, 'don't know' from respondents who do know know their income and 'refused' from respondents who refused to reveal their income. Therefore it has been filtered using 'filter()'.
+
+```{r}
+#Filter out unrealistic values
+ces2000_yd <- 
+  ces2000_yd %>% 
+  filter(income_cat < 11)
+```
+
+Below is a summary of types of all observations and missing value. 
+
+```{r}
+#Summary of all data point type and NA
+visdat::vis_dat(ces2000_yd)
+```
+
+**Data Characteristics**
+
+Among respondents who revealed their exact income amount, the minimum yearly income is 6,000 dollars, maximum is 75,000 dollars. The median is 12,000 dollars and the mean is 24,800 dollars. IQR is 9,000.
+
+```{r}
+summary(ces2000_yd$income)
+```
+
+The minimum age among respondents is 18 years old(and he/she is 38 now), the maximum age is 98 years old. Average respondent age is 48 years old. IQR is 52. 
+
+```{r}
+summary(ces2000_yd$age)
+```
+Among people who refused to reveal the exact income but can indicate their income range, figure 1 shows that the majority of respondents reports their income to be in group 1-3, ranging from less than 20,000 dollars to 39,000 dollars. The number of respondents with more than 100,000 dollars of income levels with the number of respondents with number of respondents with income of 40,000 to 49,999 dollars. 
+
+```{r}
+#bar plot of income categories
+ces2000_yd %>% 
+  ggplot(aes(x = income_cat)) +
+  geom_bar(fill = 'violet') +
+  labs(title = 'Figure 1: Bar plot of amount of respondents in each \n income category',
+       caption = 'Data Source: CES2000')+
+  xlab('Income Category') +
+  theme_light()
+```
+
+# Graph and Discussion
+
+Note that all figures indicate the number of cases found in the data file. They cannot be interpreted as summary statistics of the population of interest.
+
+Figure 2 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues very important.
+
+```{r}
+#plot for age, environment and income
+F2 <- ces2000_yd %>% 
+  ggplot(aes(x= age, y = income_cat)) +
+  geom_point(aes(color = enviroment), show.legend = TRUE)+
+  ggtitle("Figure 2: The scatter plot of enviroment opinion in \n terms of age categorized by income") +
+  labs(caption = 'Data Source: CES2000') +
+  theme_light()
+F2
+```
+
+
+```{r, include = FALSE}
+#summary of environment protection opinion
+summary(ces2000_yd$enviroment)
+```
+
+Figure 3 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues important. 
+
+```{r}
+#plot for age, fighting crimes and income
+F3 <- ces2000_yd %>% 
+  ggplot(aes(x= age, y = income_cat)) +
+  geom_point(aes(color = fighting_crime), show.legend = TRUE)+
+  ggtitle("Figure 3: The scatter plot of age and income \n categorized by opinion towards fighting crime") +
+  labs(caption = 'Data Source: CES2000') +
+  theme_light()
+F3
+```
+
+```{r, include = FALSE}
+#summary of fighting crimes
+summary(ces2000_yd$fighting_crime)
+```
+
+Figure 4 shows scatter plots of age and opinions towards cutting taxes, colored by income categories. People in general does think environmental issues important. 
+
+```{r}
+#plot for age, cutting taxes and income
+F4 <- ces2000_yd %>% 
+  ggplot(aes(x= age, y = income_cat)) +
+  geom_point(aes(color = cutting_taxes), show.legend = TRUE)+
+  ggtitle("Figure 4: The scatter plot of cutting taxes opinion in \n terms of age categorized by income") +
+  labs(caption = 'Data Source: CES2000') +
+  theme_light()
+F4
+```
+
+
+```{r, include = FALSE}
+#summary of cutting taxes
+summary(ces2000_yd$cutting_taxes)
+```
+
+Figure 5 shows a box plot of opinion towards whether women staying home makes the society better, with reference to respondent's age. Respondents leaned towards 'strongly agree' and 'strong disagree', with older respondents preferring 'strongly agree' and younger respondents 'strongly disagree'.
+
+```{r}
+#Box plot of age and opinion towards women staying at home with their children
+ggplot(data = ces2000_yd, mapping = aes(x = women_stay_home, y = age))+
+  geom_boxplot(aes(group = cut_number(women_stay_home, 2)))+
+  ggtitle('Figure 5: Opinion towards whether society is better when \n women stay home with their children')+
+  labs(caption = 'Data Source: CES2000') +
+  theme_light()
+```
+
+Figure 6 shows the box plot of opinion towards whether LGBT marriage should be allowed, with reference to respondent's age. Younger respondents tend to be more neutral than older respondents.
+
+```{r}
+#Box plot of age and opinion towards LGBT marriage
+ggplot(data = ces2000_yd, mapping = aes(x = LGBT_marriage, y = age))+
+  geom_boxplot(aes(group = cut_number(women_stay_home, 2)))+
+  ggtitle('Figure 6: Opinion towards whether LGBT marriage should be allowed')+
+  labs(caption = 'Data Source: CES2000') +
+  theme_light()
+```
+
+
+**Conclusion**
+
+~Among those who revealed their income categories, majority(51.4%)reported income under 39,999/ year. The percentage of respondents with income between 40,000~49,999 dollars per year levels with those who reported a yearly income of over 100,000, both at 8%.
+
+~Among protecting the environment, fighting crimes and cutting taxes, respondents of CPS in 2000 thought environmental issues the most important, followed by fighting crimes and cutting taxes. There is no significant difference between age/ income groups. 
+
+~Older respondents tend to strongly agree with 'the society is better when women stay home with their children', and younger respondents tend to strong disagree with that.
+
+~Older respondents tend to be more aggressive with their opinion towards LGBT marriage, while younger respondents tend to be more neutral.
+
+# Limitation and next steps
+
+**Limitations**
+
+Filtering out the missing data may cause biased results. 
+
+Not combining two different ways of recording income makes analysis including income incomplete.
+
+**Next Steps**
+
+- Incorporate ways to model for the missing data instead of filter().
+
+- Incorporate ways to combine two variables of income into a single one.
+
+# Appendix
+
+```{r}
+#Score for importance of 'issues'
+app_1 <- data.frame(
+  Value = c("1", "2", "3", "7", "8", "9"),
+  Label = c("Very Important","Somewhat Important","Not Very Important","Do not plan to vote","don't know","refused")
+)
+
+kable(app_1, caption = "Rating Scores for importance")
+```
+
+```{r}
+#Score for importance of agreements
+app_2 <- data.frame(
+  Value = c("1", "3", "5", "7", "8", "9"),
+  Label = c("Strongly agree","Somewhat agree","Somewhat disagree","Strongly disagree","don't know","refused")
+)
+
+kable(app_2, caption = "Rating Scores for agreements")
+```
+
 
 # Reference
