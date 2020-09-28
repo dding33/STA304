@@ -11,10 +11,11 @@ bibliography: references.bib
 tags: ["R Markdown", "plot", "regression"]
 ---
 
+I use `R`[@cr] and `R` package `tidyverse` [@ctidyverse] to do the analysis. i also used `R` package `rmarkdown` [@crmd1, @crmd2] for editing.
 
-We use `R`[@cr] and `R` package `tidyverse` [@ctidyverse] to do the analysis. 
+The data was obtained from `cesR` package [@ccesR], specifically from `ces2000` package[@cces2000].
 
-Code and data supporting this analysis is avaliable at:
+Code and data supporting this analysis is available at:
 "https://github.com/dding33/STA304".
 
 ```{r setup, include=FALSE}
@@ -34,7 +35,7 @@ library(gridExtra)
 
  Class of 2022, this is the data on the year when most of you were born! Come and check on people's opinions towards some society issues that are still present today.
  
- The motivation is simple: in year of 2020, we consider our society to have a decent amount of modernness, in terms of humanities. As generation Z, we were raised to know the importance of protecting the environment, to acknowledge woman's rights, to know there should not be any racism. We got very used to these concepts to ignore that these issues, along with its 'complications', may been seen as new ideas to a society 20 years ago-----which is not long ago at all. Finding out people's opinion towards particular conflicts, and whether the thought differs between age groups and income categories is the main question of interest.
+ The motivation is simple: as generation Z, we were raised to know the importance of protecting the environment, to acknowledge woman's rights, to know there should not be any racism. We got very used to these concepts to ignore that these issues, along with its 'complications', may been seen as new ideas to a society 20 years ago-----which is not long ago at all. Finding out people's opinion towards particular social conflicts, and whether the thought differs between age groups and income categories is the main question of interest.
  
  This blog includes graphs and analysis to show you a glance of how the society back then thought of some common social issues, how they might differ between age groups/income groups. It explores basic stats characteristics of the data, mentions the limitations of this method of analysis, and potential ways to overcome these limitations.  
 
@@ -46,7 +47,7 @@ CES-E-2000, the Canadian Election Study for 2000, aims to help understanding vot
 
 The study consists of 3 surveys, CPS which was distributed and collected during campaign period, PES which stands for post election survey, and MBS were usually sent out one to two weeks after completion of PES. 
 
-We focus on the CPS in this blog. Rating scores and their description can be found in appendix(table 2 and Table 3).   
+We focus on the CPS in this blog. Rating scores and their description can be found in appendix(Table 2 and Table 3).   
 
 
 ```{r download, include=FALSE, warning=FALSE, message=FALSE}
@@ -59,7 +60,7 @@ cesR::get_ces('ces2000')
 
 **Data Wrangling**
 
-'ces2000' contains 3651 observations of 790 variables, and are categorized into 95 groups. The writer of this blog reduced it down to 13 variables from 4 categorical groups, including group vote intentions, group personal finance, group policy I&II, which suits the question of interest the best.  
+'ces2000' contains 3651 observations of 790 variables, and is categorized into 95 groups. The writer of this blog reduced it down to 13 variables from 4 categorical groups, including group vote intentions, group personal finance, group policy I&II, which suit the question of interest the best.  
 
 ```{r, include=FALSE}
 #Select variables
@@ -125,7 +126,7 @@ table(ces2000_yd$income_cat)
 round(prop.table(table(ces2000_yd$income_cat)), 10)
 ```
 
-Income categories 11 and above does not represent something meaningful to this blog, since it contains system missing values, 'don't know' from respondents who do know know their income and 'refused' from respondents who refused to reveal their income. Therefore it has been filtered using 'filter()'.
+Income categories with value of 11 and above does not represent something meaningful to this blog, since it contains system missing values, 'don't know' from respondents who do know know their income and 'refused' from respondents who refused to reveal their income. Therefore it has been filtered using 'filter()'.
 
 ```{r}
 #Filter out unrealistic values
@@ -169,7 +170,7 @@ ces2000_yd %>%
 
 # Graph and Discussion
 
-Note that all figures indicate the number of cases found in the data file. They cannot be interpreted as summary statistics of the population of interest.
+Note that all figures indicate the number of cases found in the data file. They cannot be interpreted as summary statistics of the population of interest.[@cces2000]
 
 Figure 2 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues very important.
 
@@ -190,7 +191,7 @@ F2
 summary(ces2000_yd$enviroment)
 ```
 
-Figure 3 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues important. 
+Figure 3 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards fighting crimes between different age groups and income categories, and people in general does think environmental issues important. 
 
 ```{r}
 #plot for age, fighting crimes and income
@@ -208,7 +209,7 @@ F3
 summary(ces2000_yd$fighting_crime)
 ```
 
-Figure 4 shows scatter plots of age and opinions towards cutting taxes, colored by income categories. People in general does think environmental issues important. 
+Figure 4 shows scatter plots of age and opinions towards cutting taxes, colored by income categories. We see no significant distinction of opinions towards cutting taxes between different age groups and income categories.
 
 ```{r}
 #plot for age, cutting taxes and income
@@ -227,7 +228,7 @@ F4
 summary(ces2000_yd$cutting_taxes)
 ```
 
-Figure 5 shows a box plot of opinion towards whether women staying home makes the society better, with reference to respondent's age. Respondents leaned towards 'strongly agree' and 'strong disagree', with older respondents preferring 'strongly agree' and younger respondents 'strongly disagree'.
+Figure 5 shows a box plot of opinions towards whether women staying home makes the society better, with reference to respondent's age. Respondents leaned towards 'strongly agree' and 'strong disagree', with older respondents preferring 'strongly agree' and younger respondents 'strongly disagree'.
 
 ```{r}
 #Box plot of age and opinion towards women staying at home with their children
@@ -238,7 +239,7 @@ ggplot(data = ces2000_yd, mapping = aes(x = women_stay_home, y = age))+
   theme_light()
 ```
 
-Figure 6 shows the box plot of opinion towards whether LGBT marriage should be allowed, with reference to respondent's age. Younger respondents tend to be more neutral than older respondents.
+Figure 6 shows a box plot of opinion towards whether LGBT marriage should be allowed, with reference to respondent's age. Younger respondents tend to be more neutral than older respondents.
 
 ```{r}
 #Box plot of age and opinion towards LGBT marriage
@@ -252,9 +253,9 @@ ggplot(data = ces2000_yd, mapping = aes(x = LGBT_marriage, y = age))+
 
 **Conclusion**
 
-~Among those who revealed their income categories, majority(51.4%)reported income under 39,999/ year. The percentage of respondents with income between 40,000~49,999 dollars per year levels with those who reported a yearly income of over 100,000, both at 8%.
+~Among those who revealed their income categories, majority(51.4%)reported income under 39,999 per year. The percentage of respondents with income between 40,000~49,999 dollars per year levels with those who reported a yearly income of over 100,000, both at 8%.
 
-~Among protecting the environment, fighting crimes and cutting taxes, respondents of CPS in 2000 thought environmental issues the most important, followed by fighting crimes and cutting taxes. There is no significant difference between age/ income groups. 
+~Among protecting the environment, fighting crimes and cutting taxes, respondents of CPS in 2000 thought environmental issues the most important, followed by fighting crimes and cutting taxes. There is no significant difference between age/income groups. 
 
 ~Older respondents tend to strongly agree with 'the society is better when women stay home with their children', and younger respondents tend to strong disagree with that.
 
@@ -273,6 +274,10 @@ Not combining two different ways of recording income makes analysis including in
 - Incorporate ways to model for the missing data instead of filter().
 
 - Incorporate ways to combine two variables of income into a single one.
+
+*The end of official blog.*
+
+*Thanks for reading:)*
 
 # Appendix
 

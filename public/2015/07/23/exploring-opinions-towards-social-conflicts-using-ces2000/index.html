@@ -60,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">6 min read</span>
+    <span class="article-duration">7 min read</span>
     
 
     <h1 class="article-title">Exploring Opinions Towards Social Conflicts Using CES2000</h1>
@@ -73,13 +73,14 @@
       
 
 
-<p>We use <code>R</code><span class="citation">(R Core Team 2020)</span> and <code>R</code> package <code>tidyverse</code> <span class="citation">(Wickham et al. 2019)</span> to do the analysis.</p>
-<p>Code and data supporting this analysis is avaliable at:
+<p>I use <code>R</code><span class="citation">(R Core Team 2020)</span> and <code>R</code> package <code>tidyverse</code> <span class="citation">(Wickham et al. 2019)</span> to do the analysis. i also used <code>R</code> package <code>rmarkdown</code> <span class="citation">(Allaire et al. 2020, @crmd2)</span> for editing.</p>
+<p>The data was obtained from <code>cesR</code> package <span class="citation">(Hodgetts and Alexander 2020)</span>, specifically from <code>ces2000</code> package<span class="citation">(Blais et al. 2000)</span>.</p>
+<p>Code and data supporting this analysis is available at:
 “<a href="https://github.com/dding33/STA304" class="uri">https://github.com/dding33/STA304</a>”.</p>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Class of 2022, this is the data on the year when most of you were born! Come and check on people’s opinions towards some society issues that are still present today.</p>
-<p>The motivation is simple: in year of 2020, we consider our society to have a decent amount of modernness, in terms of humanities. As generation Z, we were raised to know the importance of protecting the environment, to acknowledge woman’s rights, to know there should not be any racism. We got very used to these concepts to ignore that these issues, along with its ‘complications’, may been seen as new ideas to a society 20 years ago—–which is not long ago at all. Finding out people’s opinion towards particular conflicts, and whether the thought differs between age groups and income categories is the main question of interest.</p>
+<p>The motivation is simple: as generation Z, we were raised to know the importance of protecting the environment, to acknowledge woman’s rights, to know there should not be any racism. We got very used to these concepts to ignore that these issues, along with its ‘complications’, may been seen as new ideas to a society 20 years ago—–which is not long ago at all. Finding out people’s opinion towards particular social conflicts, and whether the thought differs between age groups and income categories is the main question of interest.</p>
 <p>This blog includes graphs and analysis to show you a glance of how the society back then thought of some common social issues, how they might differ between age groups/income groups. It explores basic stats characteristics of the data, mentions the limitations of this method of analysis, and potential ways to overcome these limitations.</p>
 </div>
 <div id="data-discussion" class="section level1">
@@ -87,9 +88,9 @@
 <p><strong>Brief</strong></p>
 <p>CES-E-2000, the Canadian Election Study for 2000, aims to help understanding voting behaviors among Canadians using survey data, collected from all provinces across Canada. The study uses individuals as unit of analysis, and lasted over the period of 2000 to 2001.</p>
 <p>The study consists of 3 surveys, CPS which was distributed and collected during campaign period, PES which stands for post election survey, and MBS were usually sent out one to two weeks after completion of PES.</p>
-<p>We focus on the CPS in this blog. Rating scores and their description can be found in appendix(table 2 and Table 3).</p>
+<p>We focus on the CPS in this blog. Rating scores and their description can be found in appendix(Table 2 and Table 3).</p>
 <p><strong>Data Wrangling</strong></p>
-<p>‘ces2000’ contains 3651 observations of 790 variables, and are categorized into 95 groups. The writer of this blog reduced it down to 13 variables from 4 categorical groups, including group vote intentions, group personal finance, group policy I&amp;II, which suits the question of interest the best.</p>
+<p>‘ces2000’ contains 3651 observations of 790 variables, and is categorized into 95 groups. The writer of this blog reduced it down to 13 variables from 4 categorical groups, including group vote intentions, group personal finance, group policy I&amp;II, which suit the question of interest the best.</p>
 <p>Table 1 gives a summary of all variables selected.</p>
 <table>
 <caption><span id="tab:unnamed-chunk-2">Table 1: </span>Variables in the ces2000 dataset
@@ -160,7 +161,7 @@ and their description</caption>
 </tbody>
 </table>
 <p>Data types of a few variables are changed to fit into ggplot function for data visualization later.</p>
-<p>Income categories 11 and above does not represent something meaningful to this blog, since it contains system missing values, ‘don’t know’ from respondents who do know know their income and ‘refused’ from respondents who refused to reveal their income. Therefore it has been filtered using ‘filter()’.</p>
+<p>Income categories with value of 11 and above does not represent something meaningful to this blog, since it contains system missing values, ‘don’t know’ from respondents who do know know their income and ‘refused’ from respondents who refused to reveal their income. Therefore it has been filtered using ‘filter()’.</p>
 <p>Below is a summary of types of all observations and missing value.</p>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p><strong>Data Characteristics</strong></p>
@@ -175,20 +176,20 @@ and their description</caption>
 </div>
 <div id="graph-and-discussion" class="section level1">
 <h1>Graph and Discussion</h1>
-<p>Note that all figures indicate the number of cases found in the data file. They cannot be interpreted as summary statistics of the population of interest.</p>
+<p>Note that all figures indicate the number of cases found in the data file. They cannot be interpreted as summary statistics of the population of interest.<span class="citation">(Blais et al. 2000)</span></p>
 <p>Figure 2 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues very important.</p>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>Figure 3 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards environment between different age groups and income categories, and people in general does think environmental issues important.</p>
+<p>Figure 3 shows scatter plots of age and income category, colored by opinion towards environment protection. We see no significant distinction of opinions towards fighting crimes between different age groups and income categories, and people in general does think environmental issues important.</p>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>Figure 4 shows scatter plots of age and opinions towards cutting taxes, colored by income categories. People in general does think environmental issues important.</p>
+<p>Figure 4 shows scatter plots of age and opinions towards cutting taxes, colored by income categories. We see no significant distinction of opinions towards cutting taxes between different age groups and income categories.</p>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<p>Figure 5 shows a box plot of opinion towards whether women staying home makes the society better, with reference to respondent’s age. Respondents leaned towards ‘strongly agree’ and ‘strong disagree’, with older respondents preferring ‘strongly agree’ and younger respondents ‘strongly disagree’.</p>
+<p>Figure 5 shows a box plot of opinions towards whether women staying home makes the society better, with reference to respondent’s age. Respondents leaned towards ‘strongly agree’ and ‘strong disagree’, with older respondents preferring ‘strongly agree’ and younger respondents ‘strongly disagree’.</p>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>Figure 6 shows the box plot of opinion towards whether LGBT marriage should be allowed, with reference to respondent’s age. Younger respondents tend to be more neutral than older respondents.</p>
+<p>Figure 6 shows a box plot of opinion towards whether LGBT marriage should be allowed, with reference to respondent’s age. Younger respondents tend to be more neutral than older respondents.</p>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p><strong>Conclusion</strong></p>
-<p>~Among those who revealed their income categories, majority(51.4%)reported income under 39,999/ year. The percentage of respondents with income between 40,000~49,999 dollars per year levels with those who reported a yearly income of over 100,000, both at 8%.</p>
-<p>~Among protecting the environment, fighting crimes and cutting taxes, respondents of CPS in 2000 thought environmental issues the most important, followed by fighting crimes and cutting taxes. There is no significant difference between age/ income groups.</p>
+<p>~Among those who revealed their income categories, majority(51.4%)reported income under 39,999 per year. The percentage of respondents with income between 40,000~49,999 dollars per year levels with those who reported a yearly income of over 100,000, both at 8%.</p>
+<p>~Among protecting the environment, fighting crimes and cutting taxes, respondents of CPS in 2000 thought environmental issues the most important, followed by fighting crimes and cutting taxes. There is no significant difference between age/income groups.</p>
 <p>~Older respondents tend to strongly agree with ‘the society is better when women stay home with their children’, and younger respondents tend to strong disagree with that.</p>
 <p>~Older respondents tend to be more aggressive with their opinion towards LGBT marriage, while younger respondents tend to be more neutral.</p>
 </div>
@@ -202,6 +203,8 @@ and their description</caption>
 <li><p>Incorporate ways to model for the missing data instead of filter().</p></li>
 <li><p>Incorporate ways to combine two variables of income into a single one.</p></li>
 </ul>
+<p><em>The end of official blog.</em></p>
+<p><em>Thanks for reading:)</em></p>
 </div>
 <div id="appendix" class="section level1">
 <h1>Appendix</h1>
@@ -279,11 +282,23 @@ and their description</caption>
 <div id="reference" class="section level1 unnumbered">
 <h1>Reference</h1>
 <div id="refs" class="references">
+<div id="ref-crmd1">
+<p>Allaire, JJ, Yihui Xie, Jonathan McPherson, Javier Luraschi, Kevin Ushey, Aron Atkins, Hadley Wickham, Joe Cheng, Winston Chang, and Richard Iannone. 2020. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>.</p>
+</div>
+<div id="ref-cces2000">
+<p>Blais, André, Elisabeth Gidengil, Neil Nevitte, P Fournier, and J Everitt. 2000. “The 2000 Canadian Election Study.[dataset].” <em>Vancouver: University of British Columbia</em>.</p>
+</div>
+<div id="ref-ccesR">
+<p>Hodgetts, Paul A., and Rohan Alexander. 2020. <em>CesR: Access the Ces Datasets a Little Easier.</em></p>
+</div>
 <div id="ref-cr">
 <p>R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
 </div>
 <div id="ref-ctidyverse">
 <p>Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. “Welcome to the tidyverse.” <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.</p>
+</div>
+<div id="ref-crmd2">
+<p>Xie, Yihui, J. J. Allaire, and Garrett Grolemund. 2018. <em>R Markdown: The Definitive Guide</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>.</p>
 </div>
 </div>
 </div>

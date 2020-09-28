@@ -13,10 +13,10 @@
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
       <guid>/2015/07/23/exploring-opinions-towards-social-conflicts-using-ces2000/</guid>
-      <description>We use R(R Core Team 2020) and R package tidyverse (Wickham et al. 2019) to do the analysis.
-Code and data supporting this analysis is avaliable at: “https://github.com/dding33/STA304”.
-Introduction Class of 2022, this is the data on the year when most of you were born! Come and check on people’s opinions towards some society issues that are still present today.
-The motivation is simple: in year of 2020, we consider our society to have a decent amount of modernness, in terms of humanities.</description>
+      <description>I use R(R Core Team 2020) and R package tidyverse (Wickham et al. 2019) to do the analysis. i also used R package rmarkdown (Allaire et al. 2020, @crmd2) for editing.
+The data was obtained from cesR package (Hodgetts and Alexander 2020), specifically from ces2000 package(Blais et al. 2000).
+Code and data supporting this analysis is available at: “https://github.com/dding33/STA304”.
+Introduction Class of 2022, this is the data on the year when most of you were born!</description>
     </item>
     
   </channel>
