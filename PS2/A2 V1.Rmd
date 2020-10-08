@@ -1,0 +1,310 @@
+---
+title: "Recommendations on Promoting Strategies in Toronto for the Provincial Conservative Party of Canada Based on Poll in September 2020 in Toronto"
+author: "Yiqu Ding"
+date: "10/2/2020"
+output: 
+  pdf_document:
+    fig_width: 4.1
+    fig_height: 3.2
+    fig_crop: false
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.align = "center")
+library(tidyverse)
+library(knitr)
+library(plyr)
+```
+
+# Executive Summary
+
+The Petit Poll Canada commissioned this report in September 2020. It will inform the poll office at the provincial Conservative Party of Canada about results and analysis of the September poll in Toronto and recommend campaigning strategies on behalf of Petit Poll.  
+
+This report tracks 13 key indicators that provide insight into the appropriate promoting strategies for the Party. The objective is to gather a sample of residents in Toronto selected by SRSWOR, simple random sampling without replacement. The approach is to distribute questionnaires to a list of randomly selected addresses, from which are registered with Service Ontario. The complete survey can be found in the appendix. The cost is approximately 26,800 dollars, mainly on printing the surveys and mailing them.
+
+Petit Poll designed the questionnaire for the Provincial Conservative Party of Canada. It consists of 16 questions divided into five sections: basic information, tax policies, oil exploration and extraction, COVID-related financial assistance,  and COVID-related rules and restrictions. The questionnaire covers both regular poll questions about the  Conservative Party’s area of interest and questions that fit more closely with the current COVID pandemic.
+
+This report analyzed and discussed the data set ‘poll_sep,’ consisting of responses collected from the questionnaire mentioned above. The aim is to provide publicizing suggestions supported by data and serve the Party’s target more closely. All codes of the analysis in this report are reproducible. Please see the link in the appendix.
+
+The results show that the pandemic and its effects gain a significant amount of attention from people. Keeping track of these issues can help the Conservative Party adjust its goal to fit closer to what is needed by the people they serve. Specifically, People tend to have stronger opinions towards COVID-related financial supports than they have for reducing tax or paying more attention to oil production. This indicates that campaigning related to strategies to overcome the pandemic should be the top priority. People from different age groups have various aspects of view on how to reopen the Canadian economy. Whether Canada should reopen depends on the number of new daily COVID cases, reflecting the amount of attention people pay to their health and safety.
+ 
+This report lacks some inclusiveness in exchange for a more convenient data collection process as of limitations and future steps. The sample size is also estimated with limited prior information. Therefore the survey design for forthcoming polls can experiment with pilot surveys distributed before the main survey for a more accurate sample size determination and improve the questionnaire to be more flexible. Note that the ladder improvement also means more work during the data collection process.
+
+# Introduction
+
+This report aims to show a summary of public opinions towards both conventional strategies for the Conservative party of Canada and more recent changes brought by the COVID pandemic. The provincial Conservative Party of Canada can use this report to plan its future campaigns and promotions.
+
+Knowing that conventionally the Party has its primary support in Canadian prairies and suburban Ontario, it could be beneficial to learn about polls in regions where it is not supported necessarily the most. Since  COVID impacts the country tremendously now,  a major political party naturally needs to keep informed about any change of attitudes among people and react correspondingly. 
+
+It is essential to know some of the terminologies that will appear throughout this report. Generally, the Party refers to the provincial Conservative Party of Canada. "Tax reduction" refers to including but not restricted to a lower tax rate, a more flexible standard to claim for tax reduction with CRA, a larger amount of tax reduction claimed with CRA for business and individuals. "Oil exploration and extraction" refers to including but not restricted to: the search of natural gas and hydrocarbon by geologists, mining and extraction of natural gas, gas export. “COVID-related financial assistance”  refers to including but not restricted to: CRB, CERB, CRSB, CRCB, CEWS.  “COVID-related rules and restrictions” refers to the new by-law/rules in place because of COVID.
+
+This report indicates the survey methodology, including the survey design and sample size estimation. It then explores data collected and discusses their implications. Based on that, it gives recommendations on publicizing for the Conservative Party of Canada. 
+
+# Survey Methodology
+
+**Survey Design**
+
+The population of this survey is residents in Toronto who are at least 18 years old. The sampling frame is residents who have their address registered with Service Ontario, who are at least 18 years old. Under SRSWOR, k addresses are selected from the list of K addresses, the paperback surveys are sent to the chosen k address, and one person per address is asked to fill it out. A prepaid return label shall be included to increase receivers' incentive to respond. Inside each mail, an online option to fill out the survey is included. This combination helps make sure both the younger and older generations have equal chances to complete the survey. 
+
+The survey questions should summarize respondents’ opinions on selected important issues/conflicts/policies related to the Conservative Party’s main guidelines; therefore, they should provide support and orientation towards its publicizing behaviors.
+
+SRSWOR with a list frame might not be the most cost-effective survey method. The main expenses are printing and mailing the paperback surveys, where it would be costly, but since Petit Poll can get a business rate as a firm, the rate shall be slightly lower than commercial mailing. Then the staff from Petit Poll can operate the data collection. Still, it provides a more accurate inference towards the population, which is the primary concern for one of Canada’s largest political parties.
+
+Essentially, both the number of nonresponses and the degree that the nonrespondents as a group differ from the respondents determine nonresponse bias. There is no evidence to show a significant difference between the respondents and nonrespondents since the number of personal questions is minimal.
+
+**Sample Size Estimation**
+
+Again, this survey’s primary goal is to keep close track of the respondent’s opinions towards essential issues. Therefore, an even distribution between the respondent’s age is required. 
+The formula used to determine the b  sample size is  $n = \frac{Z^2_{\alpha/2}\sigma^2_y}{e^2+Z^2_{\alpha/2}\sigma^2_y/N }= \frac{n_0}{1+n_o/N}$, in which N is approximately 5,928,040 (based on Toronto census profile 2016), and $\sigma^2_y$ is 1/4 based on($\sigma^2_y = P(1-P)$). Use the absolute tolerable error e = 2.5% and set $\alpha = 0.05$. That gives $n = \frac{1.96^2*0.2499}{0.025^2+1.96^2*0.2499/5928040} =1536$. Considering the average response rate of commercial surveys(20%), we finalize the sample size required by $n_s = \frac{1536}{0.2} =7860$.
+
+# Results and Discussion
+
+**Survey Results**
+
+Using SRSWOR, 7860 observations of 15 variables are collected. The unit of analysis is individuals. Table 1 shows the first six rows of selected columns of the result. One can find full details of the data collected in table x from the appendix. 
+
+```{r}
+sample_size <- 7860
+#Data are collected section by section
+set.seed(3329)
+#basic info
+basic <- tibble(
+  id = c(1:sample_size),
+  age = sample(x = c(18:100), size = sample_size, replace = TRUE),
+  gender = sample(x = c("male", "female", "other"), size = sample_size, replace = TRUE, prob =  c(0.495, 0.495, 0.01)),
+  education = sample(x = c("No cirtificate", "secondary degree", "post-secondary degree", "master or PhD"), size = sample_size, replace = TRUE, prob = c(0.134, 0.212, 0.476, 0.067))
+)
+
+#tax policies
+tax <- tibble(
+  id = c(1:sample_size),
+  support_tax_reduction = sample(x = c("yes", "no", "neutral"), 
+                                 size = sample_size, replace = TRUE, prob = c(0.293, 0.407, 0.3)),
+  reduction_distribution = sample(x = c("differ by area", "differ by income", "differ by industry", "same", "other"),size = sample_size, replace = TRUE, prob = c(0.2,0.2,0.2,0.2,0.2))
+)
+
+#oil industry
+oil <- tibble(
+  id = c(1:sample_size),
+  support_oil_production = sample(x = c("yes", "no", "neutral"), size = sample_size, replace = TRUE, prob = c(0.257, 0.261, 0.482)),
+  greatest_concern = sample(x = c("pollution", "change of oil price", "resource sustainability", "other"), size = sample_size, replace = TRUE),
+  personal = sample(x = c("yes", "no", "neutral"), size = sample_size, replace = TRUE)
+)
+
+#COVID financial support
+benefits <- tibble(
+  id = c(1:sample_size),
+  support_current_benefits = sample(x = c("yes", "no", "neutral"), size = 
+                                      sample_size, replace = TRUE, prob = c(
+                                        0.527, 0.3, 0.173)), 
+  benefit_duration = sample(x = c(1:36), size = sample_size, replace = TRUE)
+)
+
+#COVID related rules
+covid <- tibble(
+  id = c(1:sample_size),
+  supportive_general = sample(c(1:5), size = sample_size, replace = TRUE, prob = c(0.3,0.3,0.2,0.1,0.1)),
+  supportive_increasing = sample(c(1:5), size = sample_size, replace = TRUE, prob = c(0.4,0.35,0.15,0.06,0.04)),
+  supportive_decreasing = sample(c(1:5), size = sample_size, replace = TRUE, prob = c(0.05,0.1,0.2,0.3,0.44)),
+  reopen_distribution = sample(x = c("differ by covid severity in the area", "differ by industry", "same for all", "other"), size = sample_size, replace = TRUE),
+  inter_travel = sample(x = c("banned", "conditionally banned", "free in all ways"), size = sample_size, replace = TRUE),
+  gathering = sample(x = c("banned", "conditionally banned", "free in all ways"), size = sample_size, replace = TRUE)
+)
+
+#joining separate data frames together
+poll_sep <- join_all(list(basic, tax, oil, benefits,covid), by = 'id', type = "left")
+#Attach data set to R search path.
+attach(poll_sep)
+```
+
+```{r}
+#show the first 6 rows of the 'collected' data
+kable(head(select(poll_sep, id, age, support_tax_reduction, support_current_benefits, support_oil_production)), caption = "A Glance of The Data Base",label = " Data Source: Petit Poll September 2020")
+```
+
+**EDA**
+
+Table 2 shows different attitudes towards selected policies: the majority (40.7%) does not support a tax reduction; more people are neutral towards it than those in favor of it. We suggest lessening the weight of campaigning in tax reduction. We recommend emphasizing continuing/improving COVID related financial supports, which could potentially win respondents who are not satisfied with current financial supporting programs. The majority of respondents are neutral towards having more oil exploration and is no surprise because this is a broad topic in which its connection with daily life not obvious. Therefore we suggest campaigning on more critical issues first and discuss this topic when there is extra time/budget.
+
+```{r}
+#summary of support rate towards different policies
+summ_po <- data.frame(
+  policy = c("tax reduction", "COVID related social benefits", "oil exploitation"),
+  support_rate = c("29.3%", "52.7%", "25.7%"),
+  non_support_rate = c("40.7%", "30%", "17.3%"),
+  neutral_rate = c("30%", "17.3%", "48.2%")
+)
+kable(summ_po, col.names = c("Policy", "Support rate", "Non support rate", "Neutral rate"),caption = "Summary of Support Rate towards Selected Policies",label = "Petit Poll September 2020")
+```
+
+Among people who support a tax reduction shown in figure 1, they support differentiating tax reduction by income most strongly, followed by industry. A large proportion of `other` is worth noticing as well, it will be discussed in the limitations. Deriving from this, we suggest considering discriminated tax reduction policies for different income levels and different industries.
+
+```{r}
+#Create a data frame with respondents who support tax reduction
+support_tax <- poll_sep %>% 
+  filter(support_tax_reduction == "yes") %>% 
+  select(reduction_distribution)
+```
+
+```{r}
+#Create a bar plot of different methods to distribute tax reduction
+ggplot(support_tax) +
+  geom_bar(aes(x = reduction_distribution), fill = "lightpink1")+
+  ggtitle(label = "Figure 1: Summary About How to Perform Tax \n Reduction")+
+  labs(caption = "Data Source: Petit Poll September 2020")+
+  theme(axis.text.x = element_text(angle = 15, vjust = 0.3, hjust=0.3))
+```
+
+
+Figure 2 shows that the median age for people who think the reopening of the Canadian economy should differ by industry is slightly older, while the rest three categories have similar median age. Based on this result, we recommend investing in promotions on how to differentiate the reopen stages by the industry with some more conservative medians, i.e., newspaper, radio.
+
+```{r}
+#Box plot of age by reopen_distribution
+ggplot(poll_sep) +
+  geom_boxplot(aes(x = reopen_distribution, y = age))+
+  ggtitle(label = "Figure 2: Age by opnions towards how to reopen")+
+  labs(caption = "Data Source: Petit Poll September 2020")+
+  theme(axis.text.x = element_text(angle = 15, vjust = 0.3, hjust=0.3))
+```
+
+Figures 3, 4, and 5 show the comparison between attitudes towards reopening the Canadian economy. Respondent attitudes towards reopening are measured using a scale of 5, 1 being not at all supportive, and five being strongly supportive. Table 4 in the appendix shows the detailed scoring descriptions.
+
+```{r}
+#Comparison between attitudes towards reopening differed by new daily cases
+ggplot(poll_sep)+
+  geom_boxplot(aes(x = supportive_general))+
+  ggtitle(label = "Figure 3: Attitudes towards reopening Canada \n in General")+
+  labs(caption = "Data Source: Petit Poll September 2020")+
+  theme_light()
+```
+
+
+```{r}
+ggplot(poll_sep)+
+  geom_boxplot(aes(x = supportive_increasing))+
+  ggtitle(label = "Figure 4: Attitudes towards reopening Canada \n When Daily Cases keep Increasing")+
+  labs(caption = "Data Source: Petit Poll September 2020")+
+  theme_light()
+```
+
+
+```{r}
+ggplot(poll_sep)+
+  geom_boxplot(aes(x = supportive_decreasing))+
+  ggtitle(label = "Figure 5: Attitudes towards reopening Canada \n When Daily Cases keep Decreasing")+
+  labs(caption = "Data Source: Petit Poll September 2020")+
+  theme_light()
+```
+
+Table 3 summarizes the attitude scores towards reopening the Canadian economy. The mean supporting score towards reopening in general, and when daily cases increase are both close to 2, which stands for 'not supportive'. At the same time, they both differ significantly from the mean supporting score towards reopening when the number of new daily cases decrease. This reflects that respondents want the reopening to happen, but they still put their health before that. Therefore we suggest emphasizing strategies to reopen safely, and complete shut down is not a good option.  
+
+```{r, include = FALSE}
+#Sum the stats for attitudes
+summary(poll_sep$supportive_general)
+summary(poll_sep$supportive_increasing)
+summary(poll_sep$supportive_decreasing)
+```
+
+```{r}
+#summary table for reopening the Canadian economy
+summ_reopen <- data.frame(case = c("New Daily Cases keeps decreasing", "General",
+                                   "New Dailt Cases keeps increasing"),
+                          mean = c(3.899, 2.401,1.995))
+kable(summ_reopen, caption = "Mean supporting scale for Reopening the Canadian Economy")
+```
+
+Figure 6 shows that the most significant proportion of respondents think other side effects come with more oil exploration. Among the rest, the most concerned is the change in oil prices, followed by pollution and resource sustainability. Thus, coming up with a strategy that will stabilize oil prices when extracting oil in Canada could compensate for this concern, potentially increasing public support to increase oil exploration and extraction, which is one of the main characteristics of the Conservative Party of Canada. 
+
+```{r}
+#Select individuals who do not support oil exploitation
+non_oil_support <- poll_sep %>% 
+  filter(support_oil_production == "no") %>% 
+  select(greatest_concern, personal)
+```
+
+```{r}
+#Create a bar plot of people's greatest concern towards oil exploitation
+ggplot(non_oil_support) +
+  geom_bar(aes(x = greatest_concern), fill = "lightpink1")+
+  ggtitle(label = "Figure 6: Summary about greatest concern \n towards oil exploration")+
+  labs(caption = "Data Source: Petit Poll September 2020")+
+  theme_light()
+```
+
+**Conclusion**
+
+- Mandating safety measures protecting people from COVID are top priorities. While safe, reopening the Canadian economy means a lot to residents in Toronto. Petit Poll highly recommends emphasizing how to achieve this goal.
+
+- Due to a 30 percent nonsupport rate, we suggest keeping a close eye on current COVID-related financial assistance in further polls. Prepare a plan for a different financial support program. If the dissatisfaction rate keeps growing, consider talking about adding the new program to improve the satisfaction rate.
+
+- Campaigning for more oil exploration and extraction is not a top priority; It will take a better chance when the COVID situation improves. Strategies for stable oil prices should be prepared but not advertised at this point. 
+
+- Different age groups think differently on how to reopen the Canadian economy. Using different target median to promote reopening strategies for different groups should improve promoting efficiency. 
+
+- Consider promoting discriminated tax reduction policies.
+
+**Limitations and Solutions**
+
+~Without more preliminary information, there might be bias when dealing with nonresponses. We can resolve this by looking into more historical data or develop a pilot survey before distributing the official one. 
+
+~Large proportion of `other` indicates inconclusive questionnaire design; therefore, it could miss another important aspect for a complete summary of opinions. This can be resolved by posting another questionnaire asking for specifications to those who answered `other` for their initial response.
+
+~Limited length and scope of the survey might lead to wrong suggestions. The future survey can be designed based on the client's interest; therefore, it can be more specific, targeting precisely the Party’s need.
+
+# Reference
+
+- Franklin, S., &amp; Walker, C. (2003). Survey methods and practices. Ottawa: Statistics Canada, Social Survey Methods Division. Retrieved from https://www150.statcan.gc.ca/n1/en/pub/12-587-x/12-587-x2003001-eng.pdf?st=b1f6H-v0
+
+- Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical Software, 40(1), 1-29. URL http://www.jstatsoft.org/v40/i01/.
+
+- R Core Team (2020). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/;
+  
+- Statistics Canada. 2017. Toronto [Census metropolitan area], Ontario and Ontario [Province] (table). Census Profile. 2016 Census. Statistics Canada Catalogue no. 98-316-X2016001. Ottawa. Released November 29, 2017.
+https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/index.cfm?Lang=E (accessed October 4, 2020).
+
+- Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+- Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.30.
+
+- Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd edition. Chapman and Hall/CRC. ISBN 978-1498716963
+
+- Yihui Xie (2014) knitr: A Comprehensive Tool for Reproducible Research in R. In Victoria Stodden, Friedrich Leisch and Roger D. Peng, editors, Implementing Reproducible Computational Research. Chapman and Hall/CRC. ISBN 978-1466561595;
+
+# Appendix
+
+```{r}
+#Supportive Scale
+app_1 <- data.frame(
+  Value = c("1", "2", "3", "4", "5"),
+  Label = c(" Not at all supportive","Not supportive"," Neutral ","Supportive","Strongly supportive")
+)
+
+kable(app_1, caption = "Rating Scale for Supportivity")
+```
+
+Please find the whole survey from (https://docs.google.com/forms/d/e/1FAIpQLSff0uA7y8HFAJtyLSzE2MjAITXB_3ewp7nQhHsd5cfAH8MUBA/viewform?usp=sf_link). All the code and outcomes of this report can be found in(https://github.com/dding33/STA304). 
+
+Below are screenshots of the complete survey.
+
+![Introduction](C:\Users\ding\Documents\STA304\PS2\Screenshot 1.png)
+
+![Basic Info](C:\Users\ding\Documents\STA304\PS2\Screenshot 2.png)
+
+![Tax Policies ](C:\Users\ding\Documents\STA304\PS2\Screenshot 3.png)
+
+![Oil Exploration ](C:\Users\ding\Documents\STA304\PS2\Screenshot 4.png)
+
+![COVID-related Financial Assistance](C:\Users\ding\Documents\STA304\PS2\Screenshot 5.png)
+
+![COVID-related Rules and Restrictions I ](C:\Users\ding\Documents\STA304\PS2\Screenshot 6.png)
+
+![COVID-related Rules and Restrictions II](C:\Users\ding\Documents\STA304\PS2\Screenshot 7.png)
+
+![Ending](C:\Users\ding\Documents\STA304\PS2\Screenshot 8.png)
+
+
+
+
+
+
